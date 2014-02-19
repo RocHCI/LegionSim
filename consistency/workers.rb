@@ -16,13 +16,13 @@ end
 class OptimalWorker < Worker
 	def initialize(ansSet, ansIdx)
 		# 
-		self.super
+		super
 		answers << ansSet[ansIdx]
 	end
 
 	def initialize(ansSet)
 		# 
-		self.super
+		super
 		answers << ansSet.sample
 	end
 
@@ -39,7 +39,7 @@ end
 class RandomWorker < Worker
 	def initialize(ansSet)
 		# 
-		self.super
+		super
 		answers = ansSet.clone
 	end
 

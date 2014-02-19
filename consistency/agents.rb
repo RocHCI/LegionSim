@@ -27,6 +27,10 @@ end
 
 # Crowd agent
 class CrowdAgent < Agent
+	def initialize(actSet)
+		super(actSet)
+	end
+
 	def initWorkers(actSet)
 		# Add N workers
 		for i in 0...5
@@ -44,6 +48,10 @@ end
 
 # Random agent
 class RandomAgent < Agent
+	def initialize(actSet)
+		super(actSet)
+	end
+
 	# TODO: Use a random worker
 	def initWorkers(actSet)
 		# Add N workers
