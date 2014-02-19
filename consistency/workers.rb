@@ -1,50 +1,49 @@
 #!/bin/ruby
 
 class Worker
-	answers = Array.new
-	answerIdx = 0
-
+	@answers = nil
 	def initialize()
-		puts("NO WORKER CONSTRUTOR DEFINED!!")
+		@answers = Array.new
 	end
 
 	def getResp()
 		puts("NO getResp() FUNCTION FOUND IN WORKER!!")
+	end
+
+	def getAnswers()
+		return @answers
 	end
 end
 
 class OptimalWorker < Worker
 	def initialize(ansSet, ansIdx)
 		# 
-		super
-		answers << ansSet[ansIdx]
+		super()
+		@answers << ansSet[ansIdx]
 	end
 
 	def initialize(ansSet)
 		# 
-		super
-		answers << ansSet.sample
+		super()
+		@answers << ansSet.sample
 	end
 
-	def initialize()
-		# 
-	end
 
 	# Be able to get a response
 	def getResp()
-		return answer
+		return @answer
 	end
 end
 
 class RandomWorker < Worker
 	def initialize(ansSet)
 		# 
-		super
-		answers = ansSet.clone
+		super()
+		@answers = ansSet.clone
 	end
 
 	def getResp()
-		return answers.sample
+		return @answers.sample
 	end
 end
 

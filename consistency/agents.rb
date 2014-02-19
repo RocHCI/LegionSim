@@ -4,10 +4,11 @@ require_relative 'workers.rb'
 
 # Basic agents (abstract class)
 class Agent
-	@@workers = Array.new
+	@workers = nil
 
 	# Constructor
 	def initialize(actSet)
+		@workers = Array.new
 		# Initialize all workers (abstract function)
 		initWorkers(actSet)
 	end
@@ -34,7 +35,7 @@ class CrowdAgent < Agent
 	def initWorkers(actSet)
 		# Add N workers
 		for i in 0...5
-			@@workers << OptimalWorker.new(actSet)
+			@workers << OptimalWorker.new(actSet)
 		end
 	end
 
@@ -56,14 +57,14 @@ class RandomAgent < Agent
 	def initWorkers(actSet)
 		# Add N workers
 		for i in 0...5
-			@@workers << RandomWorker.new(actSet)
+			@workers << RandomWorker.new(actSet)
 		end
 	end
 
 
 	# Random value
 	def getMove()
-		return actSet.sample
+		return (@workers.sample).getAnswers().sample
 	end
 end
 

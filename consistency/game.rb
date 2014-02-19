@@ -16,6 +16,7 @@ randAgent = RandomAgent.new(actionSet)
 # Test loop
 idx = 0
 while( idx < @NumRounds )
+	stepIdx = 0
 	while( stepIdx < @NumSteps )
 		puts(randAgent.getMove())
 
