@@ -4,13 +4,18 @@ require_relative 'workers.rb'
 
 # Basic agents (abstract class)
 class Agent
-	workers = Array.new
+	@@workers = Array.new
 
 	# Constructor
-	def new(actSet)
+	def initialize(actSet)
 		# Initialize all workers (abstract function)
 		initWorkers(actSet)
 	end
+
+	def initWorkers(actSet)
+		puts("NO initWorkers() FUNCTION FOUND IN Agent")
+	end
+
 
 	# Basic aggregation function call
 	def getMove()
@@ -18,11 +23,6 @@ class Agent
 		puts("NO getMove() FUNCTION FOUND!!")
 		return false
 	end
-
-	def initWorkers(actSet)
-		puts("NO initWorkers() FUNCTION FOUND IN Agent")
-	end
-
 end
 
 # Crowd agent
@@ -30,7 +30,7 @@ class CrowdAgent < Agent
 	def initWorkers(actSet)
 		# Add N workers
 		for i in 0...5
-			workers << OptimalWorker.new(actSet)
+			@@workers << OptimalWorker.new(actSet)
 		end
 	end
 
@@ -48,7 +48,7 @@ class RandomAgent < Agent
 	def initWorkers(actSet)
 		# Add N workers
 		for i in 0...5
-			workers << RandomWorker.new(actSet)
+			@@workers << RandomWorker.new(actSet)
 		end
 	end
 
@@ -58,4 +58,5 @@ class RandomAgent < Agent
 		return actSet.sample
 	end
 end
+
 
