@@ -4,7 +4,7 @@ class Worker
 	answers = Array.new
 	answerIdx = 0
 
-	def new()
+	def initialize()
 		puts("NO WORKER CONSTRUTOR DEFINED!!")
 	end
 
@@ -14,19 +14,19 @@ class Worker
 end
 
 class OptimalWorker < Worker
-	def new(ansSet, ansIdx)
+	def initialize(ansSet, ansIdx)
 		# 
-		self.new()
+		self.super
 		answers << ansSet[ansIdx]
 	end
 
-	def new(ansSet)
+	def initialize(ansSet)
 		# 
-		self.new()
+		self.super
 		answers << ansSet.sample
 	end
 
-	def new()
+	def initialize()
 		# 
 	end
 
@@ -37,9 +37,9 @@ class OptimalWorker < Worker
 end
 
 class RandomWorker < Worker
-	def new(ansSet)
+	def initialize(ansSet)
 		# 
-		self.new
+		self.super
 		answers = ansSet.clone
 	end
 
