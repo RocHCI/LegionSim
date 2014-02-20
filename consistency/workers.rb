@@ -1,17 +1,17 @@
 #!/bin/ruby
 
 class Worker
-	@answers = nil
+	@actions = nil
 	def initialize()
-		@answers = Array.new
+		@actions = Array.new
 	end
 
 	def getResp()
 		puts("NO getResp() FUNCTION FOUND IN WORKER!!")
 	end
 
-	def getAnswers()
-		return @answers
+	def getActions()
+		return @actions
 	end
 end
 
@@ -19,19 +19,19 @@ class OptimalWorker < Worker
 	def initialize(ansSet, ansIdx)
 		# 
 		super()
-		@answers << ansSet[ansIdx]
+		@actions << ansSet[ansIdx]
 	end
 
 	def initialize(ansSet)
 		# 
 		super()
-		@answers << ansSet.sample
+		@actions << ansSet.sample
 	end
 
 
 	# Be able to get a response
 	def getResp()
-		return @answer
+		return @actions[0]
 	end
 end
 
@@ -39,11 +39,11 @@ class RandomWorker < Worker
 	def initialize(ansSet)
 		# 
 		super()
-		@answers = ansSet.clone
+		@actions = ansSet.clone
 	end
 
 	def getResp()
-		return @answers.sample
+		return @actions.sample
 	end
 end
 

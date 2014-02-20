@@ -2,23 +2,75 @@
 
 # LIBS
 require_relative 'agents.rb'
+require_relative 'metrics.rb'
 
 # VARS
-actionSet = ['act1', 'act2', 'act3']
-@NumRounds = 1
-@NumSteps = 10
+actionSet = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+@NumRounds = 5000
+@NumSteps = 100
+@Tenure = 10
+@Incr = 10
+
+while( @Tenure < 1000 )
 
 ##  MAIN  ##
-crowdAgent = CrowdAgent.new(actionSet)
 randAgent = RandomAgent.new(actionSet)
+fixedAgent = FixedAgent.new(actionSet)
+crowdAgent = CrowdAgent.new(actionSet)
 
+
+# Logging arrays
+rResultSet = Array.new
+fResultSet = Array.new
+cResultSet = Array.new
 
 # Test loop
 idx = 0
 while( idx < @NumRounds )
+
+#puts("=======================")
+#puts("ROUND NUMBER ##{idx}")
+#puts("=======================")
+
+	# NOTE: Turnover position OPTION #2
+=begin
+	if( idx % @Tenure == 0 )
+		randAgent.rotateWorker()
+		crowdAgent.rotateWorker()
+	end
+=end
+
 	stepIdx = 0
+	rActions = Array.new
+	fActions = Array.new
+	cActions = Array.new
 	while( stepIdx < @NumSteps )
-		puts(randAgent.getMove())
+
+#puts("=======================")
+#puts("STEP NUMBER ##{stepIdx}")
+#puts("=======================")
+
+# NOTE: Turnover position OPTION #1
+#=begin
+		if( stepIdx % @Tenure == 0 )
+			randAgent.rotateWorker()
+			fixedAgent.rotateWorker()
+			crowdAgent.rotateWorker()
+		end
+#=end
+
+		rAct = randAgent.getMove()
+		fAct = fixedAgent.getMove()
+		cAct = crowdAgent.getMove()
+		rActions << rAct
+		fActions << fAct
+		cActions << cAct
+
+=begin
+		puts("\nAgent R: #{randAgent.getMove()}")
+		puts("Agent F: #{fixedAgent.getMove()}")
+		puts("Agent C: #{crowdAgent.getMove()}")
+=end
 
 		# Move to the next step
 		stepIdx += 1
@@ -27,4 +79,28 @@ while( idx < @NumRounds )
 
 	# Move to the next round
 	idx += 1
+
+	# Calculate the entropy for each agent
+	rEnt = findEntropy(rActions)
+	fEnt = findEntropy(fActions)
+	cEnt = findEntropy(cActions)
+
+	# Output
+	#puts("Entropy-Crowd: #{cEnt}, Entropy-Rand: #{rEnt}")
+
+	# Record the result
+	rResultSet << rEnt
+	fResultSet << fEnt
+	cResultSet << cEnt
 end
+
+# Final answers
+#puts("Average Entropy - Random: #{rResultSet.mean}")
+#puts("Average Entropy - Fixed: #{fResultSet.mean}")
+#puts("Average Entropy - Crowd: #{cResultSet.mean}")
+
+# Print in CSV format
+puts("#{rResultSet.mean},#{fResultSet.mean},#{cResultSet.mean}")
+
+@Tenure += @Incr
+}
