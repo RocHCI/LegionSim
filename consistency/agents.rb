@@ -112,7 +112,7 @@ class CrowdAgent < Agent
 	def initialize(actSet)
 		super(actSet)
 
-		@gamma = 0.8
+		@gamma = 0.9
 		@leader
 	end
 
