@@ -6,12 +6,13 @@ require_relative 'metrics.rb'
 
 # VARS
 actionSet = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
-@NumRounds = 5000
-@NumSteps = 100
+@NumRounds = 500
+@NumSteps = 1000
 @Tenure = 10
 @Incr = 10
 
-while( @Tenure < 1000 )
+puts("Tenure_Length,Random-Agent,Fixed-Agent,Crowd-Agent")
+while( @Tenure <= 1000 )
 
 ##  MAIN  ##
 randAgent = RandomAgent.new(actionSet)
@@ -100,7 +101,7 @@ end
 #puts("Average Entropy - Crowd: #{cResultSet.mean}")
 
 # Print in CSV format
-puts("#{rResultSet.mean},#{fResultSet.mean},#{cResultSet.mean}")
+puts("#{@Tenure},#{rResultSet.mean},#{fResultSet.mean},#{cResultSet.mean}")
 
 @Tenure += @Incr
-}
+end
