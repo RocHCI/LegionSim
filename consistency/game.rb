@@ -11,18 +11,22 @@ actionSet = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
 @Tenure = 10
 @Incr = 10
 
-puts("Tenure_Length,Random-Agent,Fixed-Agent,Crowd-Agent")
+@AlphaVal = ARGV[0].to_f
+
+puts("Tenure_Length,Random-Agent,Fixed-Agent,Vote-Agent,Crowd-Agent")
 while( @Tenure <= 1000 )
 
 	##  MAIN  ##
-	randAgent = RandomAgent.new(actionSet)
-	fixedAgent = FixedAgent.new(actionSet)
-	crowdAgent = CrowdAgent.new(actionSet)
+	randAgent = RandomAgent.new(actionSet, @AlphaVal)
+	fixedAgent = FixedAgent.new(actionSet, @AlphaVal)
+	voteAgent = VoteAgent.new(actionSet, @AlphaVal)
+	crowdAgent = CrowdAgent.new(actionSet, @AlphaVal)
 
 
 	# Logging arrays
 	rResultSet = Array.new
 	fResultSet = Array.new
+	vResultSet = Array.new
 	cResultSet = Array.new
 
 	# Test loop
@@ -41,6 +45,7 @@ while( @Tenure <= 1000 )
 		stepIdx = 0
 		rActions = Array.new
 		fActions = Array.new
+		vActions = Array.new
 		cActions = Array.new
 		while( stepIdx < @NumSteps )
 
@@ -49,14 +54,17 @@ while( @Tenure <= 1000 )
 			if( stepIdx % @Tenure == 0 )
 				randAgent.rotateWorker()
 				fixedAgent.rotateWorker()
+				voteAgent.rotateWorker()
 				crowdAgent.rotateWorker()
 			end
 
 			rAct = randAgent.getMove()
 			fAct = fixedAgent.getMove()
+			vAct = voteAgent.getMove()
 			cAct = crowdAgent.getMove()
 			rActions << rAct
 			fActions << fAct
+			vActions << vAct
 			cActions << cAct
 
 =begin
@@ -76,6 +84,7 @@ while( @Tenure <= 1000 )
 		# Calculate the entropy for each agent
 		rEnt = findEntropy(rActions)
 		fEnt = findEntropy(fActions)
+		vEnt = findEntropy(vActions)
 		cEnt = findEntropy(cActions)
 
 		# Output
@@ -84,6 +93,7 @@ while( @Tenure <= 1000 )
 		# Record the result
 		rResultSet << rEnt
 		fResultSet << fEnt
+		vResultSet << vEnt
 		cResultSet << cEnt
 	end
 
@@ -93,7 +103,7 @@ while( @Tenure <= 1000 )
 	#puts("Average Entropy - Crowd: #{cResultSet.mean}")
 
 	# Print in CSV format
-	puts("#{@Tenure},#{rResultSet.mean},#{fResultSet.mean},#{cResultSet.mean}")
+	puts("#{@Tenure},#{rResultSet.mean},#{fResultSet.mean},#{vResultSet.mean},#{cResultSet.mean}")
 
 	@Tenure += @Incr
 end

@@ -5,7 +5,7 @@ require_relative 'workers.rb'
 # Basic agents (abstract class)
 class Agent
 	## STATIC VARS
-	@@Alpha = 0.5
+	@@Alpha = 0.8
 	@@N = 10
 
 	 # Obj datastructs
@@ -15,9 +15,10 @@ class Agent
 
 
 	# Constructor
-	def initialize(actSet)
+	def initialize(actSet, inAlpha)
 		@workers = Array.new
 		@weights = Array.new
+		@@Alpha = inAlpha
 
 		# Initialize all workers (abstract function)
 		initWorkers(actSet)
@@ -25,10 +26,10 @@ class Agent
 		@actions = actSet.clone
 	end
 
-	# 
+	#
 	def initWorkers(actSet)
-		#puts("N = #{@@N} | a = #{@@Alpha}")	
-	
+		#puts("N = #{@@N} | a = #{@@Alpha}")
+
 		# Add N workers
 		for i in 0...(@@N*@@Alpha).to_i
 			@workers << OptimalWorker.new(actSet)
@@ -80,12 +81,13 @@ class FixedAgent < Agent
 	end
 
 
-	# "Correct answer 
+	# "Correct answer
 	def getMove()
 		# Always take the same answer
-		return @workers[0].getActions()[0]
+		#return @workers[0].getActions()[0]
+		return @workers[0].getResp()
 	end
-	
+
 end
 
 # Random agent
@@ -100,7 +102,8 @@ class RandomAgent < Agent
 		# Random move by random worker
 		#return (@workers.sample).getActions().sample
 		# Fixed move by random worker
-		return (@workers.sample).getActions()[0]
+		#return (@workers.sample).getActions()[0]
+		return (@workers.sample).getResp()
 	end
 end
 
@@ -117,7 +120,7 @@ class CrowdAgent < Agent
 	end
 
 
-	# "Correct answer 
+	# "Correct answer
 	def getMove()
 		# TODO: Implement this mediator
 
@@ -127,7 +130,8 @@ class CrowdAgent < Agent
 		aggrCount = 0
 		wCount = Hash.new
 		@workers.each{ |w|
-			curAns = w.getActions()[0]
+			#curAns = w.getActions()[0]
+			curAns = w.getResp()
 			if( aggrAns[curAns] == nil )
 				aggrAns[curAns] = 0
 			end
@@ -156,7 +160,7 @@ class CrowdAgent < Agent
 				wAns[wid][act] = wAns[wid][act]/wCount[wid]
 			}
 		}
-			
+
 
 		#@workers.each{ |w|
 			# Find the new agreement rate
@@ -191,7 +195,7 @@ class CrowdAgent < Agent
 
 
 		# Now find the leader to listen to!
-		
+
 #puts(@weights)
 #puts("LEADER: #{@leader}  ==>  #{wAns[@workers[@leader]]}")
 		# NOTE: We should be returning the whole hash here, but since we will only ever have 1 answer for the individual, we just pull that key out (ignoring the vote count fixed to 1) and return it
@@ -202,3 +206,49 @@ class CrowdAgent < Agent
 	end
 end
 
+
+# Majority vote agent
+class VoteAgent < Agent
+
+	def initialize(actSet)
+		super(actSet)
+
+	end
+
+
+	# "Correct answer
+	def getMove()
+		# TODO: Implement this mediator
+
+		# Find the aggregate answer
+		aggrAns = Hash.new
+		aggrCount = 0
+		#puts("Worker input::")
+		@workers.each{ |w|
+			#curAns = w.getActions()[0]
+			curAns = w.getResp()
+			#puts(curAns)
+			if( aggrAns[curAns] == nil )
+				aggrAns[curAns] = 0
+			end
+			aggrAns[curAns] += 1
+
+			aggrCount += 1
+		}
+
+#puts("Array: #{aggrCount}")
+
+		# Now find the majority answer!
+		maxCount = 0
+		maxCountKey = -1;
+		aggrAns.each_key{ |k|
+			if( aggrAns[k] > maxCount )
+				maxCount = aggrAns[k]
+				maxCountKey = k
+			end
+		}
+
+#puts("Selecting: #{maxCountKey}")
+		return maxCountKey
+	end
+end
