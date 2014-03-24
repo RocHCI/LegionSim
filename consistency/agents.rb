@@ -76,8 +76,8 @@ end
 
 # Fixed-action agent
 class FixedAgent < Agent
-	def initialize(actSet)
-		super(actSet)
+	def initialize(actSet, inAlpha)
+		super(actSet, inAlpha)
 	end
 
 
@@ -92,8 +92,8 @@ end
 
 # Random agent
 class RandomAgent < Agent
-	def initialize(actSet)
-		super(actSet)
+	def initialize(actSet, inAlpha)
+		super(actSet, inAlpha)
 	end
 
 
@@ -112,8 +112,8 @@ end
 class CrowdAgent < Agent
 	@gamma = nil
 
-	def initialize(actSet)
-		super(actSet)
+	def initialize(actSet, inAlpha)
+		super(actSet, inAlpha)
 
 		@gamma = 0.9
 		@leader
@@ -210,8 +210,8 @@ end
 # Majority vote agent
 class VoteAgent < Agent
 
-	def initialize(actSet)
-		super(actSet)
+	def initialize(actSet, inAlpha)
+		super(actSet, inAlpha)
 
 	end
 
